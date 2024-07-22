@@ -124,7 +124,7 @@ if (geradores.length === 0) {
   // Criar o cabeçalho do CSV
   const cabecalho = 'ID Gerador,Potencia,Produtos IDs,Produtos Nomes,Quantidades\n';
 
-  // Mapear os geradores para uma string CSV com formatação JSON
+  // Informações das linhas
   const linhas = geradores.map(gerador => {
     // Formatando cada campo como JSON
     const produtosIdsJson = JSON.stringify(gerador.produtosIds);
