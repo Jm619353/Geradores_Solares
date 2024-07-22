@@ -121,29 +121,32 @@ if (geradores.length === 0) {
 } else {
   // Preparar dados para CSV manualmente
 
-  // Informações do cabeçalho
-  const cabecalho = '--INFORMAÇÕES DOS GERADORES--\n';
+  // Criar o cabeçalho do CSV
+  const cabecalho = 'ID Gerador,Potencia,Produtos IDs,Produtos Nomes,Quantidades\n';
 
-  // Informações das linhas
+  // Mapear os geradores para uma string CSV com formatação JSON
   const linhas = geradores.map(gerador => {
-    const quantidades = Object.entries(gerador.quantidades)
-      .map(([id, qtd]) => `${id}:${qtd}`)
-      .join('; ');
-    return `{
-    ID Gerador: ${gerador.id},
-    Potencia (em W): ${gerador.potencia}, 
-    ID Produtos: ${gerador.produtosIds.join(', ')},
-    Nome do Produto: ${gerador.produtosNomes.join(', ')},
-    Quantidades Item: ${quantidades}
-  }`;
+    // Formatando cada campo como JSON
+    const produtosIdsJson = JSON.stringify(gerador.produtosIds);
+    const produtosNomesJson = JSON.stringify(gerador.produtosNomes);
+    const quantidadesJson = JSON.stringify(gerador.quantidades);
+
+    return [
+      gerador.id,
+      gerador.potencia,
+      produtosIdsJson,
+      produtosNomesJson,
+      quantidadesJson
+    ].join(',');
   }).join('\n');
 
-  const csv = cabecalho + linhas;
+  // Criar o conteúdo do arquivo CSV
+  const conteudoCSV = cabecalho + linhas;
 
   // Grava as informações dos geradores no arquivo JSON
   fs.writeFileSync('geradores.json', JSON.stringify(geradores, null, 2)); 
 
   // Grava as informações dos geradores no arquivo CSV
-  fs.writeFileSync('geradores.csv', csv); 
+  fs.writeFileSync('geradores.csv', conteudoCSV); 
   console.log(`Número total de geradores criados: ${geradores.length}`);
 }
